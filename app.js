@@ -812,14 +812,15 @@ function printResult(studentId) {
   const result   = DB.getResult(studentId, settings.session, settings.term);
   if (!student || !result) return;
   const clsStudents = DB.getStudents().filter(s=>s.classId===student.classId);
-  // Only rank students who have results entered for this session/term
+  // Position only assigned when ALL students in the class have results entered
   const clsWithResults = clsStudents.filter(s => !!DB.getResult(s.id, settings.session, settings.term));
+  const allHaveResults = clsWithResults.length === clsStudents.length && clsStudents.length > 0;
   const ranked = clsWithResults.map(s => {
     const r = DB.getResult(s.id, settings.session, settings.term);
     const {avg} = computeResult(r.scores||{}, CLASS_SUBJECTS[s.classId]||[]);
     return {id:s.id,avg:parseFloat(avg)||0};
   }).sort((a,b)=>b.avg-a.avg);
-  const rank = ranked.findIndex(s=>s.id===studentId)+1;
+  const rank = allHaveResults ? ranked.findIndex(s=>s.id===studentId)+1 : 0;
   const html = isCrecheClass(student.classId)
     ? buildCrecheResultHTML(student, result)
     : buildResultHTML(student, result, rank, clsWithResults.length, true);
@@ -909,8 +910,9 @@ function batchPrintClass(classId) {
   const students = DB.getStudents().filter(s => s.classId === classId);
   if (students.length === 0) { alert('No students found in ' + classId); return; }
 
-  // Compute rankings — only among students who have results entered
+  // Position only assigned when ALL students in the class have results entered
   const studentsWithResults = students.filter(s => !!DB.getResult(s.id, settings.session, settings.term));
+  const allHaveResults = studentsWithResults.length === students.length && students.length > 0;
   const withAvg = studentsWithResults.map(s => {
     const r = DB.getResult(s.id, settings.session, settings.term);
     const { avg } = computeResult(r.scores || {}, CLASS_SUBJECTS[classId] || []);
@@ -925,7 +927,7 @@ function batchPrintClass(classId) {
   const pages = [];
   studentsWithResults.forEach(s => {
     const r = DB.getResult(s.id, settings.session, settings.term);
-    const rank = rankMap[s.id];
+    const rank = allHaveResults ? rankMap[s.id] : 0;
     if (isCrecheClass(classId)) {
       pages.push(buildCrecheResultHTML(s, r));
     } else {
@@ -1033,6 +1035,7 @@ function printAllClasses() {
     if (clsStudents.length === 0) return;
 
     const clsWithResults = clsStudents.filter(s => !!DB.getResult(s.id, settings.session, settings.term));
+    const allHaveResults = clsWithResults.length === clsStudents.length && clsStudents.length > 0;
     const withAvg = clsWithResults.map(s => {
       const r = DB.getResult(s.id, settings.session, settings.term);
       const { avg } = computeResult(r.scores || {}, CLASS_SUBJECTS[cls] || []);
@@ -1045,10 +1048,11 @@ function printAllClasses() {
 
     clsWithResults.forEach(s => {
       const r = DB.getResult(s.id, settings.session, settings.term);
+      const rank = allHaveResults ? rankMap[s.id] : 0;
       if (isCrecheClass(cls)) {
         pages.push(buildCrecheResultHTML(s, r));
       } else {
-        pages.push(buildResultHTML(s, r, rankMap[s.id], totalRanked, true));
+        pages.push(buildResultHTML(s, r, rank, totalRanked, true));
       }
     });
   });
