@@ -149,11 +149,11 @@ function buildCrecheResultHTML(student, result) {
     : `<div style="width:90px;height:105px;border:2.5px dashed #00B050;display:flex;align-items:center;justify-content:center;font-size:11px;color:#aaa;text-align:center;border-radius:3px;line-height:1.6;font-family:'Times New Roman',serif;">Passport<br/>Photo</div>`;
 
   const stampHTML = settings.stampImage
-    ? `<img src="${settings.stampImage}" style="width:110px;height:110px;object-fit:contain;opacity:0.9;vertical-align:bottom;" />`
+    ? `<img src="${settings.stampImage}" style="width:160px;height:160px;object-fit:contain;display:block;" />`
     : '';
 
   const watermarkHTML = (typeof SCHOOL_LOGO !== 'undefined' && SCHOOL_LOGO)
-    ? `<div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-20deg);opacity:0.055;pointer-events:none;z-index:0;">
+    ? `<div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-20deg);opacity:0.02;pointer-events:none;z-index:0;">
         <img src="${SCHOOL_LOGO}" style="width:380px;height:380px;object-fit:contain;" />
        </div>`
     : '';
