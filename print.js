@@ -118,7 +118,7 @@ function buildResultHTML(student, result, position, totalStudents, forPrint=true
 
   // Watermark
   const watermarkHTML = (typeof SCHOOL_LOGO !== 'undefined' && SCHOOL_LOGO)
-    ? `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-20deg);opacity:0.02;pointer-events:none;z-index:0;">
+    ? `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-20deg);opacity:0.02;pointer-events:none;z-index:0;width:320px;height:320px;margin-left:-160px;margin-top:-160px;">
         <img src="${SCHOOL_LOGO}" style="width:320px;height:320px;object-fit:contain;" />
        </div>`
     : '';
@@ -178,8 +178,8 @@ function buildResultHTML(student, result, position, totalStudents, forPrint=true
 </head>
 <body>
 
+  <div style="position:relative;z-index:1;overflow:hidden;">
   ${watermarkHTML}
-  <div style="position:relative;z-index:1;">
 
   <!-- ═══ HEADER ═══ -->
   <table style="border:none;margin-bottom:6px;">
