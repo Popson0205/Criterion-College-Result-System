@@ -812,20 +812,22 @@ function printResult(studentId) {
   const result   = DB.getResult(studentId, settings.session, settings.term);
   if (!student || !result) return;
   const clsStudents = DB.getStudents().filter(s=>s.classId===student.classId);
-  const ranked = clsStudents.map(s => {
+  // Only rank students who have results entered for this session/term
+  const clsWithResults = clsStudents.filter(s => !!DB.getResult(s.id, settings.session, settings.term));
+  const ranked = clsWithResults.map(s => {
     const r = DB.getResult(s.id, settings.session, settings.term);
-    if (!r) return {id:s.id,avg:0};
     const {avg} = computeResult(r.scores||{}, CLASS_SUBJECTS[s.classId]||[]);
     return {id:s.id,avg:parseFloat(avg)||0};
   }).sort((a,b)=>b.avg-a.avg);
   const rank = ranked.findIndex(s=>s.id===studentId)+1;
   const html = isCrecheClass(student.classId)
     ? buildCrecheResultHTML(student, result)
-    : buildResultHTML(student, result, rank, clsStudents.length, true);
+    : buildResultHTML(student, result, rank, clsWithResults.length, true);
   const win = window.open('','_blank');
   win.document.write(html);
   win.document.close();
-  win.document.title = ''; setTimeout(()=>win.print(), 600);
+  win.document.title = student.name.trim() + ' - ' + student.classId;
+  setTimeout(()=>win.print(), 600);
 }
 
 function shareResult(studentId) {
@@ -907,27 +909,27 @@ function batchPrintClass(classId) {
   const students = DB.getStudents().filter(s => s.classId === classId);
   if (students.length === 0) { alert('No students found in ' + classId); return; }
 
-  // Compute rankings for the class
-  const withAvg = students.map(s => {
+  // Compute rankings — only among students who have results entered
+  const studentsWithResults = students.filter(s => !!DB.getResult(s.id, settings.session, settings.term));
+  const withAvg = studentsWithResults.map(s => {
     const r = DB.getResult(s.id, settings.session, settings.term);
-    if (!r) return { id: s.id, avg: 0 };
     const { avg } = computeResult(r.scores || {}, CLASS_SUBJECTS[classId] || []);
     return { id: s.id, avg: parseFloat(avg) || 0 };
   }).sort((a, b) => b.avg - a.avg);
 
   const rankMap = {};
   withAvg.forEach((s, i) => { rankMap[s.id] = i + 1; });
+  const totalRanked = studentsWithResults.length;
 
   // Build all pages — only students who have results
   const pages = [];
-  students.forEach(s => {
+  studentsWithResults.forEach(s => {
     const r = DB.getResult(s.id, settings.session, settings.term);
-    if (!r) return; // skip students with no result
     const rank = rankMap[s.id];
     if (isCrecheClass(classId)) {
       pages.push(buildCrecheResultHTML(s, r));
     } else {
-      pages.push(buildResultHTML(s, r, rank, students.length, true));
+      pages.push(buildResultHTML(s, r, rank, totalRanked, true));
     }
   });
 
@@ -937,7 +939,8 @@ function batchPrintClass(classId) {
   const win = window.open('', '_blank');
   win.document.write(combined);
   win.document.close();
-  win.document.title = ''; setTimeout(() => win.print(), 700);
+  win.document.title = classId + ' - Results';
+  setTimeout(() => win.print(), 700);
 }
 
 // ============================================================
@@ -1029,23 +1032,23 @@ function printAllClasses() {
     const clsStudents = students.filter(s => s.classId === cls);
     if (clsStudents.length === 0) return;
 
-    const withAvg = clsStudents.map(s => {
+    const clsWithResults = clsStudents.filter(s => !!DB.getResult(s.id, settings.session, settings.term));
+    const withAvg = clsWithResults.map(s => {
       const r = DB.getResult(s.id, settings.session, settings.term);
-      if (!r) return { id: s.id, avg: 0 };
       const { avg } = computeResult(r.scores || {}, CLASS_SUBJECTS[cls] || []);
       return { id: s.id, avg: parseFloat(avg) || 0 };
     }).sort((a, b) => b.avg - a.avg);
 
     const rankMap = {};
     withAvg.forEach((s, i) => { rankMap[s.id] = i + 1; });
+    const totalRanked = clsWithResults.length;
 
-    clsStudents.forEach(s => {
+    clsWithResults.forEach(s => {
       const r = DB.getResult(s.id, settings.session, settings.term);
-      if (!r) return;
       if (isCrecheClass(cls)) {
         pages.push(buildCrecheResultHTML(s, r));
       } else {
-        pages.push(buildResultHTML(s, r, rankMap[s.id], clsStudents.length, true));
+        pages.push(buildResultHTML(s, r, rankMap[s.id], totalRanked, true));
       }
     });
   });
@@ -1055,7 +1058,9 @@ function printAllClasses() {
   const win = window.open('', '_blank');
   win.document.write(combined);
   win.document.close();
-  win.document.title = ''; setTimeout(() => win.print(), 700);
+  const settings2 = DB.getSettings();
+  win.document.title = 'Criterion College - All Results - ' + settings2.session + ' ' + settings2.term;
+  setTimeout(() => win.print(), 700);
 }
 
 // ============================================================
