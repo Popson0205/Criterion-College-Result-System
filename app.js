@@ -819,7 +819,9 @@ function printResult(studentId) {
     return {id:s.id,avg:parseFloat(avg)||0};
   }).sort((a,b)=>b.avg-a.avg);
   const rank = ranked.findIndex(s=>s.id===studentId)+1;
-  const html = buildResultHTML(student, result, rank, clsStudents.length, true);
+  const html = isCrecheClass(student.classId)
+    ? buildCrecheResultHTML(student, result)
+    : buildResultHTML(student, result, rank, clsStudents.length, true);
   const win = window.open('','_blank');
   win.document.write(html);
   win.document.close();
@@ -922,7 +924,11 @@ function batchPrintClass(classId) {
     const r = DB.getResult(s.id, settings.session, settings.term);
     if (!r) return; // skip students with no result
     const rank = rankMap[s.id];
-    pages.push(buildResultHTML(s, r, rank, students.length, true));
+    if (isCrecheClass(classId)) {
+      pages.push(buildCrecheResultHTML(s, r));
+    } else {
+      pages.push(buildResultHTML(s, r, rank, students.length, true));
+    }
   });
 
   if (pages.length === 0) { alert('No results entered for ' + classId + ' yet.'); return; }
