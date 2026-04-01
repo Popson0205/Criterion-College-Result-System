@@ -110,7 +110,6 @@ function computeCrecheResult(scores, subjects) {
 
 // Auto-comment for Creche (based on overall rating quality)
 function getCrecheComment(ratings) {
-  // Compute average from CA+Exam scores
   const allKeys = Object.keys(ratings || {});
   if (allKeys.length === 0) return '';
   let total = 0, count = 0;
@@ -219,7 +218,7 @@ function buildCrecheResultHTML(student, result) {
     <tr>
       <td style="border:none;width:100px;text-align:center;vertical-align:middle;">${logoHTML}</td>
       <td style="border:none;text-align:center;vertical-align:middle;padding:0 12px;">
-        <div style="font-size:26px;font-weight:900;color:#55A845;text-transform:uppercase;letter-spacing:1px;line-height:1.1;">CRITERION COLLEGE, OSOGBO</div>
+        <div style="font-size:32px;font-weight:900;color:#55A845;text-transform:uppercase;letter-spacing:1px;line-height:1.1;">CRITERION COLLEGE, OSOGBO</div>
         <div style="font-size:16px;font-weight:bold;color:#181717;text-transform:uppercase;letter-spacing:3px;margin-top:7px;border-top:3px solid #55A845;border-bottom:2px solid #55A845;padding:5px 0;">PROGRESS REPORT SHEET</div>
       </td>
       <td style="border:none;width:100px;text-align:center;vertical-align:middle;">${passportHTML}</td>
@@ -249,20 +248,19 @@ function buildCrecheResultHTML(student, result) {
   <!-- ═══ GRADING KEY ═══ -->
   <div style="text-align:center;font-size:12px;color:#666;font-style:italic;margin-bottom:10px;padding:4px;border:1px dashed #ccc;">
     <strong>GRADING SYSTEM:</strong>&nbsp;&nbsp;
-    <strong style="color:#1a6e3c;">Outstanding</strong> &nbsp;/&nbsp;
-    <strong style="color:#0588f0;">Very Good</strong> &nbsp;/&nbsp;
-    <strong style="color:#d97706;">Good</strong> &nbsp;/&nbsp;
-    <strong style="color:#7c3aed;">Fair</strong> &nbsp;/&nbsp;
-    <strong style="color:#dc2626;">Poor</strong>
+    <strong style="color:#1a6e3c;">Outstanding</strong> (71–100) &nbsp;/&nbsp;
+    <strong style="color:#0588f0;">Very Good</strong> (60–70) &nbsp;/&nbsp;
+    <strong style="color:#d97706;">Good</strong> (40–59) &nbsp;/&nbsp;
+    <strong style="color:#7c3aed;">Fair</strong> (&lt;40)
   </div>
 
   <!-- ═══ SKILLS TABLE ═══ -->
   <table style="margin-bottom:16px;border:1.5px solid #555;">
     <thead>
       <tr>
-        <th style="background:#00B050;color:#fff;text-align:left;padding:7px 14px;font-size:13px;border:1.5px solid #555;width:40%;">SUBJECT / SKILL</th>
-        <th style="background:#00B050;color:#fff;padding:7px;font-size:13px;border:1.5px solid #555;width:15%;">CA (40)</th>
-        <th style="background:#00B050;color:#fff;padding:7px;font-size:13px;border:1.5px solid #555;width:15%;">EXAM (60)</th>
+        <th style="background:#00B050;color:#fff;text-align:left;padding:7px 14px;font-size:13px;border:1.5px solid #555;width:40%;">SKILL / AREA</th>
+        <th style="background:#00B050;color:#fff;padding:7px;font-size:13px;border:1.5px solid #555;width:15%;">CA /40</th>
+        <th style="background:#00B050;color:#fff;padding:7px;font-size:13px;border:1.5px solid #555;width:15%;">EXAM /60</th>
         <th style="background:#00B050;color:#fff;padding:7px;font-size:13px;border:1.5px solid #555;width:30%;">RATING</th>
       </tr>
     </thead>
