@@ -113,12 +113,12 @@ function buildResultHTML(student, result, position, totalStudents, forPrint=true
 
   // Stamp — just the uploaded image, no fake box
   const stampBoxHTML = settings.stampImage
-    ? `<img src="${settings.stampImage}" style="width:160px;height:160px;object-fit:contain;display:block;" />`
-    : `<div style="width:160px;height:160px;border:2px dashed #ccc;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;color:#ccc;text-align:center;">Upload<br/>Stamp</div>`;
+    ? `<img src="${settings.stampImage}" style="width:100%;max-width:220px;height:auto;min-height:80px;object-fit:fill;display:block;" />`
+    : `<div style="width:220px;height:80px;border:2px dashed #ccc;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font-size:9px;color:#ccc;text-align:center;">Upload<br/>Stamp</div>`;
 
   // Watermark
   const watermarkHTML = (typeof SCHOOL_LOGO !== 'undefined' && SCHOOL_LOGO)
-    ? `<div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-20deg);opacity:0.02;pointer-events:none;z-index:0;">
+    ? `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-20deg);opacity:0.02;pointer-events:none;z-index:0;">
         <img src="${SCHOOL_LOGO}" style="width:320px;height:320px;object-fit:contain;" />
        </div>`
     : '';
@@ -164,6 +164,7 @@ function buildResultHTML(student, result, position, totalStudents, forPrint=true
     font-size: 11px;
     color: #000;
     background: #fff;
+    position: relative;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
     color-adjust: exact;
@@ -214,7 +215,7 @@ function buildResultHTML(student, result, position, totalStudents, forPrint=true
     </tr>
     <tr>
       <td style="border:none;padding:2px 0;">
-        ${posStr ? `<span class="green">POSITION:&nbsp;</span><span class="dark">${posStr}</span>` : ''}
+        <span class="green">POSITION:&nbsp;</span><span class="dark">${posStr}</span>
       </td>
       <td style="border:none;padding:2px 0;text-align:right;">
         <span class="green">Term:&nbsp;</span><span class="dark">${result.term}</span>
@@ -338,7 +339,7 @@ function buildResultHTML(student, result, position, totalStudents, forPrint=true
       <td style="border:none;border-right:1px solid #999;border-top:1px solid #eee;padding:5px 8px 5px 0;vertical-align:middle;">
         <div style="font-size:10px;font-style:italic;color:#333;font-weight:600;">Signature, Stamp and Date</div>
       </td>
-      <td style="border:none;border-top:1px solid #eee;padding:4px 0 4px 10px;vertical-align:middle;">
+      <td style="border:none;border-top:1px solid #eee;padding:4px 0 4px 4px;vertical-align:middle;">
         ${stampBoxHTML}
       </td>
     </tr>
