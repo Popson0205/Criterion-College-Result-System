@@ -184,7 +184,7 @@ function buildResultHTML(student, result, position, totalStudents, forPrint=true
     <tr>
       <td style="border:none;width:84px;text-align:center;vertical-align:middle;">${logoHTML}</td>
       <td style="border:none;text-align:center;vertical-align:middle;padding:0 10px;">
-        <div style="font-size:22px;font-weight:900;color:#55A845;text-transform:uppercase;letter-spacing:1px;line-height:1.1;">CRITERION COLLEGE, OSOGBO</div>
+        <div style="font-size:28px;font-weight:900;color:#55A845;text-transform:uppercase;letter-spacing:1px;line-height:1.1;">CRITERION COLLEGE, OSOGBO</div>
         <div style="font-size:13px;font-weight:bold;color:#181717;text-transform:uppercase;letter-spacing:3px;margin-top:5px;border-top:3px solid #55A845;border-bottom:2px solid #55A845;padding:4px 0;">PROGRESS REPORT SHEET</div>
       </td>
       <td style="border:none;width:84px;text-align:center;vertical-align:middle;">${passportHTML}</td>
